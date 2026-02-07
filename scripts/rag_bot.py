@@ -24,7 +24,7 @@ rag_bot.py — RAG-бот корпоративной базы знаний «М�
 import os
 import sys
 from langchain_community.vectorstores import FAISS
-from langchain_community.chat_models import ChatOllama
+from langchain_ollama import ChatOllama
 from langchain_core.messages import SystemMessage, HumanMessage
 
 # Импортируем E5Embeddings из build_index (класс с префиксами passage:/query:)
@@ -42,7 +42,7 @@ OLLAMA_MODEL = "llama3.1"
 OLLAMA_TEMPERATURE = 0          # детерминированные ответы
 OLLAMA_NUM_CTX = 4096           # размер контекстного окна
 
-TOP_K = 3                       # сколько чанков искать
+TOP_K = 5                       # сколько чанков искать
 
 
 # === Промпт ===
