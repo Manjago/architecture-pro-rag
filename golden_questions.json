@@ -1,0 +1,119 @@
+[
+  {
+    "id": 1,
+    "question": "Кто такой Лёша Облаков?",
+    "type": "success",
+    "topic": "персонаж",
+    "expected_keywords": ["Анатолий Облаков", "Лена Органова", "Татуинск", "Стартап-Альянс"],
+    "expected_source": "Люк_Скайуокер.md",
+    "notes": "Основной персонаж, подробно описан"
+  },
+  {
+    "id": 2,
+    "question": "Кто построил Офис Гибели?",
+    "type": "success",
+    "topic": "событие/объект",
+    "expected_keywords": ["Сидоров", "сепаратист"],
+    "expected_source": "Звезда_Смерти.md",
+    "notes": "ВНИМАНИЕ: Звезда_Смерти.md УДАЛЁН — ожидается провал"
+  },
+  {
+    "id": 3,
+    "question": "Что такое Продуктивность в Корпоративных Войнах?",
+    "type": "success",
+    "topic": "концепция",
+    "expected_keywords": ["Продуктивность"],
+    "expected_source": "Сила_Звёздные_войны.md",
+    "notes": "ВНИМАНИЕ: Сила_Звёздные_войны.md УДАЛЁН — ожидается провал"
+  },
+  {
+    "id": 4,
+    "question": "Чем известен Agile-Коуч Йодин?",
+    "type": "success",
+    "topic": "персонаж",
+    "expected_keywords": ["Совет разработчиков", "мудр"],
+    "expected_source": "Йода.md",
+    "notes": "ВНИМАНИЕ: Йода.md УДАЛЁН — ожидается провал"
+  },
+  {
+    "id": 5,
+    "question": "Кто такой Токсичный Тестировщик?",
+    "type": "success",
+    "topic": "персонаж",
+    "expected_keywords": ["Токсичный Тестировщик"],
+    "expected_source": "Дарт_Мол.md",
+    "notes": "Файл не удалён, должен ответить"
+  },
+  {
+    "id": 6,
+    "question": "Что произошло в Корпоративных Войнах Эпизод III?",
+    "type": "success",
+    "topic": "событие",
+    "expected_keywords": ["Месть", "токсичн"],
+    "expected_source": "Звёздные_войны._Эпизод_III_Месть_ситхов.md",
+    "notes": "Файл не удалён, должен ответить"
+  },
+  {
+    "id": 7,
+    "question": "Что такое механическая клавиатура в контексте документации?",
+    "type": "success",
+    "topic": "технология",
+    "expected_keywords": ["клавиатур"],
+    "expected_source": "Дарт_Вейдер.md",
+    "notes": "Файл не удалён, частичная информация"
+  },
+  {
+    "id": 8,
+    "question": "Кто такой Старший Наставник Олег?",
+    "type": "success",
+    "topic": "персонаж",
+    "expected_keywords": ["Олег", "наставник"],
+    "expected_source": "Оби-Ван_Кеноби.md",
+    "notes": "Файл не удалён, должен ответить"
+  },
+  {
+    "id": 9,
+    "question": "Каков рост Agile-Коуча Йодина?",
+    "type": "refusal",
+    "topic": "персонаж (удалён)",
+    "expected_keywords": [],
+    "expected_source": null,
+    "notes": "Йода.md удалён — бот НЕ должен знать ответ (66 см)"
+  },
+  {
+    "id": 10,
+    "question": "Как устроена Офис Гибели изнутри?",
+    "type": "refusal",
+    "topic": "объект (удалён)",
+    "expected_keywords": [],
+    "expected_source": null,
+    "notes": "Звезда_Смерти.md удалён — бот НЕ должен знать"
+  },
+  {
+    "id": 11,
+    "question": "Какие способности даёт Продуктивность?",
+    "type": "refusal",
+    "topic": "концепция (удалена)",
+    "expected_keywords": [],
+    "expected_source": null,
+    "notes": "Сила_Звёздные_войны.md удалён — бот НЕ должен знать"
+  },
+  {
+    "id": 12,
+    "question": "Как настроить Kubernetes кластер?",
+    "type": "refusal",
+    "topic": "вне базы",
+    "expected_keywords": [],
+    "expected_source": null,
+    "notes": "Тема полностью вне базы знаний"
+  },
+  {
+    "id": 13,
+    "question": "Какая столица Японии?",
+    "type": "refusal",
+    "topic": "вне базы",
+    "expected_keywords": [],
+    "expected_source": null,
+    "notes": "Тема полностью вне базы знаний"
+  }
+]
