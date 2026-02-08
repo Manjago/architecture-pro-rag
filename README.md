@@ -6,15 +6,42 @@
 
 ```
 architecture-pro-rag/
-├── README.md                  ← этот файл
-├── terms_map.json             ← словарь замен (Star Wars → МегаОфис)
+├── README.md                       ← этот файл
+├── terms_map.json                  ← словарь замен (Star Wars → МегаОфис, 239 терминов)
+├── golden_questions.json           ← золотой набор вопросов для оценки (13 шт.)
+├── requirements.txt                ← Python-зависимости
+├── Dockerfile                      ← образ RAG-бота
+├── docker-compose.yml              ← оркестрация: бот + Ollama
 ├── data/
-│   ├── source/                ← исходные статьи из русской Wikipedia (38 файлов)
-│   └── knowledge_base/        ← статьи после замены терминов (38 файлов)
+│   ├── source/                     ← исходные статьи из русской Wikipedia (38 файлов)
+│   └── knowledge_base/             ← статьи после замены терминов (39 файлов, вкл. malicious_test.md)
 ├── scripts/
-│   ├── download_articles.py   ← скачивание статей из Wikipedia
-│   └── prepare_data.py        ← применение замен из terms_map.json
-└── .venv/                     ← виртуальное окружение Python (не коммитится)
+│   ├── download_articles.py        ← скачивание статей из Wikipedia
+│   ├── prepare_data.py             ← применение замен из terms_map.json
+│   ├── build_index.py              ← создание FAISS-индекса
+│   ├── rag_bot.py                  ← RAG-бот (пайплайн + консольный REPL)
+│   ├── telegram_bot.py             ← Telegram-интерфейс RAG-бота (тариф Про)
+│   ├── update_index.py             ← инкрементальное обновление индекса
+│   └── evaluate.py                 ← автоматическое тестирование на golden set
+├── faiss_index/
+│   ├── index.faiss                 ← векторы (FAISS)
+│   ├── index.pkl                   ← метаданные чанков
+│   └── manifest.json               ← реестр проиндексированных файлов
+├── diagrams/
+│   ├── update_pipeline.puml        ← архитектура обновления (PlantUML)
+│   ├── update_pipeline.png
+│   ├── evaluation_sequence.puml    ← диаграмма оценки (PlantUML)
+│   └── evaluation_sequence.png
+├── logs/
+│   ├── update_log.jsonl            ← лог обновлений индекса
+│   └── evaluation_log.jsonl        ← лог оценки на golden set
+└── screenshots/
+    ├── success/                    ← 5 скриншотов успешных ответов
+    ├── refusal/                    ← 5 скриншотов отказов
+    ├── injection/                  ← тесты промпт-инъекций
+    ├── update/                     ← тест обновления индекса
+    ├── evaluate/                   ← лог автоматической оценки
+    └── telegram/                   ← Telegram-бот
 ```
 
 ---

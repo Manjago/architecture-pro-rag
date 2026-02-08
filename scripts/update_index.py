@@ -47,7 +47,7 @@ LOG_DIR = os.path.join(ROOT_DIR, "logs")
 LOG_PATH = os.path.join(LOG_DIR, "update_log.jsonl")
 
 CHUNK_SIZE = 800
-CHUNK_OVERLAP = 200
+CHUNK_OVERLAP = 150
 EXTENSIONS = (".md", ".txt")
 
 
@@ -136,7 +136,7 @@ def chunk_file(filepath: str, filename: str) -> list:
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=CHUNK_SIZE,
         chunk_overlap=CHUNK_OVERLAP,
-        separators=["\n## ", "\n### ", "\n\n", "\n", ". ", " "],
+        separators=["\n\n", "\n", ". ", " ", ""],
     )
 
     chunks = splitter.split_text(text)
