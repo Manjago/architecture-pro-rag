@@ -1,0 +1,47 @@
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: rag-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    healthcheck:
+      test: ["CMD-SHELL", "ollama list || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
+  rag-bot:
+    build: .
+    image: rag-app:latest
+    container_name: rag-bot
+    depends_on:
+      ollama:
+        condition: service_healthy
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+    volumes:
+      - ./logs:/app/logs
+      - ./screenshots:/app/screenshots
+    stdin_open: true
+    tty: true
+
+  telegram-bot:
+    image: rag-app:latest
+    container_name: rag-telegram-bot
+    depends_on:
+      ollama:
+        condition: service_healthy
+      rag-bot:
+        condition: service_started
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+      - TELEGRAM_BOT_TOKEN=YOUR_TELEGRAM_BOT_TOKEN_HERE
+    volumes:
+      - ./logs:/app/logs
+    command: ["python", "scripts/telegram_bot.py"]
+
+volumes:
+  ollama_data:
