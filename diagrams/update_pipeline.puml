@@ -1,0 +1,62 @@
+@startuml update_pipeline
+
+title Архитектура автоматического обновления базы знаний
+
+skinparam backgroundColor #FEFEFE
+skinparam shadowing false
+
+actor "cron\n(ежедневно 06:00)" as cron #LightBlue
+
+database "data/knowledge_base/\n(.md файлы)" as kb #LightGreen
+file "faiss_index/\nmanifest.json" as manifest #Gold
+file "faiss_index/\nindex.faiss" as faiss #Orange
+file "logs/\nupdate_log.jsonl" as logs #LightGray
+
+rectangle "update_index.py" as script {
+    rectangle "1. Сканирование\nисточника" as scan
+    rectangle "2. Сравнение\nс манифестом" as compare
+    rectangle "3. Чанкинг\n(RecursiveCharacterTextSplitter)" as chunk
+    rectangle "4. Эмбеддинги\n(E5-large)" as embed
+    rectangle "5. Обновление\nFAISS-индекса" as update
+    rectangle "6. Логирование" as log
+}
+
+cron --> script : запуск
+
+kb --> scan
+manifest --> compare
+scan --> compare
+compare --> chunk : новые/\nизменённые файлы
+chunk --> embed
+embed --> update
+
+update --> faiss : сохранение\nиндекса
+update --> manifest : обновление\nманифеста
+log --> logs : append\nJSONL
+
+note right of compare
+  Детекция изменений:
+  SHA-256 хеш файла
+  ≠ хеш в манифесте
+end note
+
+note right of chunk
+  chunk_size: 800
+  chunk_overlap: 200
+end note
+
+note bottom of faiss
+  FAISS.add_texts()
+  Инкрементальное
+  добавление векторов
+end note
+
+note bottom of logs
+  Формат записи:
+  timestamp, status,
+  new_files, new_chunks,
+  total_chunks, errors,
+  duration_sec
+end note
+
+@enduml

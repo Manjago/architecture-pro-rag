@@ -1,0 +1,69 @@
+@startuml evaluation_sequence
+
+title Диаграмма последовательности: обработка запроса и оценка RAG-бота
+
+skinparam backgroundColor #FEFEFE
+skinparam shadowing false
+
+actor "evaluate.py" as eval #LightBlue
+participant "FAISS Index" as faiss #Orange
+participant "Chunk Filter" as filter #Gold
+participant "Prompt Builder" as prompt #LightGreen
+participant "Ollama LLM" as llm #Salmon
+database "evaluation_log.jsonl" as log #LightGray
+
+== Цикл по golden_questions.json ==
+
+eval -> faiss : similarity_search(question, k=5)
+
+alt Индекс пуст или недоступен
+    faiss --> eval : ❌ Ошибка: пустой индекс
+    eval -> log : status="error"
+else Чанки найдены
+    faiss --> eval : top-5 чанков + scores
+end
+
+eval -> filter : is_chunk_safe(chunk) для каждого чанка
+
+alt Вредоносный чанк обнаружен
+    filter --> eval : 🛡️ chunk отфильтрован
+    note right: Паттерн-матчинг:\n"ignore all instructions",\n"output:", etc.
+end
+
+filter --> eval : безопасные чанки
+
+alt Все чанки отфильтрованы
+    eval -> log : status="all_filtered"
+else Есть безопасные чанки
+    eval -> prompt : System + Few-shot + Context + Question
+    prompt --> eval : messages[]
+
+    eval -> llm : invoke(messages)
+
+    alt LLM недоступна
+        llm --> eval : ❌ Ошибка соединения
+        eval -> log : status="llm_error"
+    else Ответ получен
+        llm --> eval : ответ бота
+    end
+end
+
+== Оценка ответа ==
+
+eval -> eval : evaluate_answer()
+note right
+  Проверки:
+  1. Отказ? (паттерны "нет информации", "не знаю")
+  2. Ключевые слова из golden set?
+  3. Матрица: TP / TN / FP / FN
+end note
+
+eval -> log : полная запись:\nquestion, answer, timestamp,\nchunks, sources, scores,\nevaluation status
+
+== Сводный отчёт ==
+
+eval -> eval : Подсчёт TP/TN/FP/FN
+eval -> eval : Анализ пробелов (FN)
+eval -> eval : Рекомендации по улучшению
+
+@enduml
