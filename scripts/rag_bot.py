@@ -387,7 +387,11 @@ def repl(vectorstore: FAISS, llm: ChatOllama):
                 print("  Использование: /filter off | /filter pre | /filter full\n")
             continue
 
-        answer = ask(question, vectorstore, llm, filter_mode=filter_mode, verbose=verbose)
+        try:
+            answer = ask(question, vectorstore, llm, filter_mode=filter_mode, verbose=verbose)
+        except Exception as e:
+            print(f"\n⚠️  Ошибка обработки запроса: {e}\n")
+            continue
         print(f"\n{'─'*60}")
         print(answer)
         print(f"{'─'*60}\n")

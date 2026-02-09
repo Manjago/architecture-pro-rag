@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   ollama:
     image: ollama/ollama:latest
@@ -8,41 +6,42 @@ services:
       - "11434:11434"
     volumes:
       - ollama_data:/root/.ollama
-    # При первом запуске нужно скачать модель:
-    #   docker exec -it rag-ollama ollama pull llama3.1
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
-      interval: 30s
-      timeout: 10s
+      test: ["CMD-SHELL", "ollama list || exit 1"]
+      interval: 10s
+      timeout: 5s
       retries: 5
+
 
   rag-bot:
     build: .
+    image: rag-app:latest
     container_name: rag-bot
     depends_on:
       ollama:
         condition: service_healthy
     environment:
       - OLLAMA_HOST=http://ollama:11434
-      # Для Telegram-бота раскомментировать:
-      # - TELEGRAM_BOT_TOKEN=your_token
     volumes:
       - ./logs:/app/logs
       - ./screenshots:/app/screenshots
-    stdin_open: true   # для интерактивного режима (консольный бот)
+    stdin_open: true
     tty: true
 
-  # Telegram-бот (альтернативный запуск)
-  # telegram-bot:
-  #   build: .
-  #   container_name: rag-telegram
-  #   depends_on:
-  #     ollama:
-  #       condition: service_healthy
-  #   environment:
-  #     - OLLAMA_HOST=http://ollama:11434
-  #     - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
-  #   command: ["python", "scripts/telegram_bot.py"]
+  telegram-bot:
+    image: rag-app:latest
+    container_name: rag-telegram-bot
+    depends_on:
+      ollama:
+        condition: service_healthy
+      rag-bot:
+        condition: service_started
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+      - TELEGRAM_BOT_TOKEN=YOUR_TELEGRAM_BOT_TOKEN_HERE
+    volumes:
+      - ./logs:/app/logs
+    command: ["python", "scripts/telegram_bot.py"]
 
 volumes:
   ollama_data:
